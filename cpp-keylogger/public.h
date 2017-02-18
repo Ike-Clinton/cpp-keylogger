@@ -8,8 +8,5 @@
 #define NOMINMAX
 #include <windows.h>
 #include <winuser.h>
+#include "prototypes.h"
 
-// Function Prototypes
-// TODO: Move prototypes to their own file
-int Save(int key_stroke, char *file);
-void HideWindow(); //Declare Stealth.

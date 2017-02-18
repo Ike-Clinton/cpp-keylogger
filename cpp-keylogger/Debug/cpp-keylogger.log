@@ -1,6 +1,23 @@
-﻿  test.cpp
-  cpp-keylogger.cpp
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(100): warning C4477: 'fprintf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'int *'
+﻿  cpp-keylogger.cpp
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(57): error C3861: 'SetHook': identifier not found
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(123): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(129): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(131): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(133): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(135): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(137): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(139): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(141): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(143): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(145): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(147): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(149): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(151): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(153): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(155): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(157): error C2065: 'key_stroke': undeclared identifier
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(160): error C2065: 'key_stroke': undeclared identifier
   Generating Code...
-  cpp-keylogger.vcxproj -> D:\github\cpp-keylogger\cpp-keylogger\Debug\cpp-keylogger.exe
-  cpp-keylogger.vcxproj -> D:\github\cpp-keylogger\cpp-keylogger\Debug\cpp-keylogger.pdb (Full PDB)
+  Compiling...
+  test.cpp
+  Generating Code...
