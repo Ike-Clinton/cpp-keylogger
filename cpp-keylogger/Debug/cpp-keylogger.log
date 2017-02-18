@@ -1,3 +1,6 @@
 ﻿  test.cpp
+  cpp-keylogger.cpp
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(100): warning C4477: 'fprintf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'int *'
+  Generating Code...
   cpp-keylogger.vcxproj -> D:\github\cpp-keylogger\cpp-keylogger\Debug\cpp-keylogger.exe
   cpp-keylogger.vcxproj -> D:\github\cpp-keylogger\cpp-keylogger\Debug\cpp-keylogger.pdb (Full PDB)

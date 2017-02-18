@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "catch.hpp"
+#include "public.h"
 
 SCENARIO("The keylogger starts, captures victim keystrokes, then writes them to a file called keys.txt on the desktop.", "[string]") {
 
