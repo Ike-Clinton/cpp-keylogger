@@ -46,14 +46,14 @@ SCENARIO("The keylogger starts, captures victim keystrokes, then writes them to 
 		
 		AND_WHEN("cpp-keylogger.exe is closed:") {
 			
-			// HWND for cpp-keylogger.exe returns 0?
+			// Process exits gracefully? returns 0?
 
 			THEN("there should be a file called keys.txt on the desktop.") {
 				// Make sure keys.txt is on the desktop
 				REQUIRE(1 == 1);
 			}
 
-			AND_THEN("there should be a file called keys.txt on the desktop.") {
+			AND_THEN("I should see the typed text in keys.txt") {
 				// keys.txt should contain "password1 The quick brown fox jumps over the lazy dog"
 				REQUIRE(1 == 1);
 			}

